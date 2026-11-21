@@ -103,7 +103,14 @@ def eb_opener() -> urllib.request.OpenerDirector:
     """Opener for EB requests: goes through EB_PROXY when set. Discord traffic never uses the proxy."""
     global _EB_OPENER
     if _EB_OPENER is None:
-        url = proxy_url(os.environ.get("EB_PROXY", ""))
+        raw = os.environ.get("EB_PROXY", "")
+        if raw.strip():
+            # Shape only, never the value, so a bad paste can be diagnosed from the run log.
+            s = raw.strip()
+            print(f"EB_PROXY shape: {len(s.split(':'))} ':'-separated parts, {len(s)} chars, "
+                  f"scheme={'yes' if '://' in s else 'no'}, lines={len(s.splitlines())}, "
+                  f"inner whitespace={'yes' if any(c.isspace() for c in s) else 'no'}")
+        url = proxy_url(raw)
         handlers = [urllib.request.ProxyHandler({"http": url, "https": url})] if url else []
         _EB_OPENER = urllib.request.build_opener(*handlers)
         if url:
