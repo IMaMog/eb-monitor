@@ -17,6 +17,7 @@ Environment:
     DISCORD_BOARD_WEBHOOK_URL  optional  channel for the live board (defaults to the alert webhook)
     DISCORD_PING               optional  mention added to alerts, e.g. <@123> or <@&456>
     INCLUDE_ACCESSORIES        optional  "true" to also track sleeves/binders/deck boxes/playmats
+    EB_PROXY                   optional  proxy for EB requests: host:port:user:pass (or host:port / full URL)
 """
 
 from __future__ import annotations
@@ -72,12 +73,52 @@ AVAILABLE = {"preorder", "in_stock", "collect_only"}
 # --------------------------------------------------------------------------- HTTP
 
 
-def http_json(url: str, body: dict | None, headers: dict, method: str = "POST", retries: int = 3):
+def proxy_url(raw: str) -> str | None:
+    """Turn EB_PROXY into a proxy URL.
+
+    Accepts host:port:user:pass (the usual proxy-provider export), host:port,
+    or a full URL such as http://user:pass@host:port.
+    """
+    raw = raw.strip()
+    if not raw:
+        return None
+    if "://" in raw:
+        return raw
+    parts = raw.split(":")
+    if len(parts) == 2:
+        host, port = parts
+        return f"http://{host}:{port}"
+    if len(parts) >= 4:
+        host, port, user = parts[0], parts[1], parts[2]
+        password = ":".join(parts[3:])  # passwords may contain ':'
+        q = lambda s: urllib.parse.quote(s, safe="")
+        return f"http://{q(user)}:{q(password)}@{host}:{port}"
+    raise ValueError("EB_PROXY must be host:port:user:pass, host:port, or a full proxy URL")
+
+
+_EB_OPENER: urllib.request.OpenerDirector | None = None
+
+
+def eb_opener() -> urllib.request.OpenerDirector:
+    """Opener for EB requests: goes through EB_PROXY when set. Discord traffic never uses the proxy."""
+    global _EB_OPENER
+    if _EB_OPENER is None:
+        url = proxy_url(os.environ.get("EB_PROXY", ""))
+        handlers = [urllib.request.ProxyHandler({"http": url, "https": url})] if url else []
+        _EB_OPENER = urllib.request.build_opener(*handlers)
+        if url:
+            print(f"Using proxy {url.rsplit('@', 1)[-1]} for EB requests")
+    return _EB_OPENER
+
+
+def http_json(url: str, body: dict | None, headers: dict, method: str = "POST", retries: int = 3,
+              opener: urllib.request.OpenerDirector | None = None):
     data = json.dumps(body).encode() if body is not None else None
+    open_ = opener.open if opener else urllib.request.urlopen
     for attempt in range(1, retries + 1):
         req = urllib.request.Request(url, data=data, headers=headers, method=method)
         try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
+            with open_(req, timeout=30) as resp:
                 raw = resp.read()
                 return resp.status, (_safe_json(raw) if raw else None)
         except urllib.error.HTTPError as e:
@@ -106,7 +147,7 @@ def _safe_json(raw: bytes):
 
 def eb_search(params: list[tuple[str, str]]) -> dict:
     url = API_URL + "?" + urllib.parse.urlencode(params)
-    status, data = http_json(url, None, API_HEADERS, method="GET")
+    status, data = http_json(url, None, API_HEADERS, method="GET", opener=eb_opener())
     if status == 403 or (isinstance(data, str) and "Just a moment" in data):
         raise RuntimeError("EB Games returned a Cloudflare challenge (HTTP 403); this IP is being blocked.")
     if status != 200 or not isinstance(data, dict) or "results" not in data:

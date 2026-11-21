@@ -36,6 +36,7 @@ EB doesn't expose stock counts or per-customer limits, so neither appears in ale
    | Secret | `DISCORD_BOARD_WEBHOOK_URL` | Board webhook (optional) |
    | Variable | `DISCORD_PING` | `<@USER_ID>` or `<@&ROLE_ID>` (optional) |
    | Variable | `INCLUDE_ACCESSORIES` | `true` (optional) |
+   | Secret | `EB_PROXY` | Proxy for EB requests, `host:port:user:pass` (needed on GitHub, since EB blocks GitHub's IPs) |
 4. **Start it.** Go to Actions → *EB Games Pokemon monitor* → Run workflow. The first run seeds the state without alerting and posts the board. Pin the board message. To preview an alert, run the workflow again with **Send a sample alert** ticked.
 
 ## How it works

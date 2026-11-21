@@ -41,6 +41,7 @@ jobs:
           DISCORD_BOARD_WEBHOOK_URL: ${{ secrets.DISCORD_BOARD_WEBHOOK_URL }}
           DISCORD_PING: ${{ vars.DISCORD_PING }}
           INCLUDE_ACCESSORIES: ${{ vars.INCLUDE_ACCESSORIES }}
+          EB_PROXY: ${{ secrets.EB_PROXY }}
         run: |
           if [ "${{ inputs.test_alert }}" = "true" ]; then
             python monitor.py --test-alert
