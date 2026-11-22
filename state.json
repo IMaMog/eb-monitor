@@ -1,7 +1,6 @@
 {
   "board_message_ids": [
-    "1573493915540127888",
-    "1573493918086074390"
+    "1574195557709254706"
   ],
   "products": {
     "341589": {
@@ -64,13 +63,10 @@
       "promo": null,
       "release": "2026-10-02",
       "sku": "383494",
-      "status": "in_stock",
+      "status": "unavailable",
       "title": "Pokémon - TCG - 2026 Q4 Mini Portfolio",
       "url": "https://www.ebgames.com.au/product/toys-and-collectibles/383494-pokemon-tcg-2026-q4-mini-portfolio",
-      "where": [
-        "Delivery",
-        "Click & Collect"
-      ]
+      "where": []
     },
     "383497": {
       "category": "Pokémon",
@@ -165,7 +161,7 @@
       "promo": null,
       "release": "2027-02-06",
       "sku": "387476",
-      "status": "preorder_full",
+      "status": "unavailable",
       "title": "Pokémon - TCG - Mega Evolution Flowing Fists Elite Trainer Box",
       "url": "https://www.ebgames.com.au/product/toys-and-collectibles/387476-pokemon-tcg-mega-evolution-flowing-fists-elite-trainer-box",
       "where": []
@@ -179,7 +175,7 @@
       "promo": null,
       "release": "2027-02-06",
       "sku": "387477",
-      "status": "preorder_full",
+      "status": "unavailable",
       "title": "Pokémon - TCG - Mega Evolution Flowing Fists Booster Bundle",
       "url": "https://www.ebgames.com.au/product/toys-and-collectibles/387477-pokemon-tcg-mega-evolution-flowing-fists-booster-bundle",
       "where": []
@@ -193,7 +189,7 @@
       "promo": null,
       "release": "2027-02-06",
       "sku": "387478",
-      "status": "preorder_full",
+      "status": "unavailable",
       "title": "Pokémon - TCG - Mega Evolution Flowing Fists 3 Booster Blister Pack",
       "url": "https://www.ebgames.com.au/product/toys-and-collectibles/387478-pokemon-tcg-mega-evolution-flowing-fists-3-booster-blister-pack",
       "where": []
