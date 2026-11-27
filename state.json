@@ -1,6 +1,7 @@
 {
   "board_message_ids": [
-    "1575787060537729186"
+    "1575947446113140768",
+    "1575947451641233428"
   ],
   "products": {
     "341589": {
@@ -77,10 +78,12 @@
       "promo": null,
       "release": "2026-11-06",
       "sku": "383496",
-      "status": "unavailable",
+      "status": "collect_only",
       "title": "Pokemon - TCG - Mega Evolution Delta Reign Elite Trainer Box",
       "url": "https://www.ebgames.com.au/product/toys-and-collectibles/383496-pokemon-tcg-mega-evolution-delta-reign-elite-trainer-box",
-      "where": []
+      "where": [
+        "Click & Collect"
+      ]
     },
     "383497": {
       "category": "Pokémon",
